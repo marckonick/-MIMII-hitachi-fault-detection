@@ -2,7 +2,7 @@ import numpy as np
 import os
 import FeatureExtractionFunctions as FEF
 import argparse
-
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--selected_machine_type",
@@ -35,8 +35,11 @@ parser.add_argument("--power_mel",
                     type = float, default = 2.0)
 parser.add_argument("--save_2_npy",
                     type = bool, default = False)
+parser.add_argument("--file_folder",
+                    type = str, default = "../")
 parser.add_argument("--save_folder",
                     type = str, default = "../SavedFeatures_NPY/")
+
 
 parser.add_argument('--selected_machine_ids', nargs='+', action = 'append', default = [0,2,4,6])
 
@@ -73,14 +76,16 @@ def main():
     X_features_all = []
     Y_features_all = []
     
-    folder_name = "../" +  selected_machine_type + "/id_0" + str(selected_machine_id) + "/" + condition_type + "/"
+    folder_name = args.file_folder +  selected_machine_type + "/id_0" + str(selected_machine_id) + "/" + condition_type + "/"
     recording_names = os.listdir(folder_name) 
     temp_kwargs = {'folder_name':folder_name}
     kwarg_args.update(temp_kwargs)
 
     print(f"\nExtracting {selected_feature} features for machine {selected_machine_id} ... ")
+    t0 = time.time()
     X_features_t, N_samples = FEF.ExtractSelectedFeatures(N_samples_2_extract, recording_names, selected_feature, **kwarg_args)
-    print("Feature extraction done ! \n")
+    t1 = time.time()
+    print(f"Feature extraction done! Elapsed time: {t1-t0:.2f} seconds\n")
     
     X_features_all.append(X_features_t)
     Y_features_all.append(np.ones(X_features_t.shape[0])*curr_label)
