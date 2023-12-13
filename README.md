@@ -5,3 +5,4 @@ File MAIN_FeatureExtraction.py is used to extract features
 
 Using of the arguments:
 
+--save_2_npy boolean <- should the extracted features be changed
