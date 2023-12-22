@@ -10,11 +10,10 @@ MAIN_FeatureExtraction.py  - extracting deatures
 MAIN_TrainAE.py            - training model 
 
 Current feature types:
-
-FFT - Fast Fourier Transform
-STFT - Short-Time Fourier Transform
-MelLog -   Mel-log spectrogram
-MEL_ENERGY -  Mel-log spectrogram energies - features taken from the baseline model repository 
+- FFT - Fast Fourier Transform
+- STFT - Short-Time Fourier Transform
+- MelLog -   Mel-log spectrogram
+- MEL_ENERGY -  Mel-log spectrogram energies - features taken from the baseline model repository 
               - https://github.com/y-kawagu/dcase2020_task2_baseline
 
 ## Example results
