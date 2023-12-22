@@ -8,6 +8,8 @@ Fault detection methods for the MIMII Hitachi dataset
 ## File Description
 MAIN_FeatureExtraction.py  - extracting deatures
 MAIN_TrainAE.py            - training model 
+MAIN_JustTestModel.py      - script for testing saved models 
+
 
 Current feature types:
 - FFT - Fast Fourier Transform
