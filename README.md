@@ -19,8 +19,8 @@ Current feature types:
 ## Example results
 
 ### pump_0dB
-machine type: pump
-SNR: 0dB 
+- machine type: pump
+- SNR: 0dB 
 
 MEL_ENER + DNN 
 - Machine ID 0.0 , ROC AUC Score:  0.9249171880750828 
