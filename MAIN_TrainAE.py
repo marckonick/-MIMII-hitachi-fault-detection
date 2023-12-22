@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--selected_machine_type",
                     type = str, default = "pump_0dB") #"fan_-6dB" # -6_dB_fan, pump_0dB, fan_-6dB 
 parser.add_argument("--selected_feature",
-                    type = str, default = "MelLog") # FFT, STFT, MEL_ENERGY, MelLog
+                    type = str, default = "MEL_ENERGY") # FFT, STFT, MEL_ENERGY, MelLog
 parser.add_argument("--feature_save_folder", 
                     type = str, default = "../SavedFeatures_NPY/")  # where the features are saved 
 parser.add_argument('--selected_machine_ids', nargs='+', action = 'append', default = [0,2,4,6])
@@ -38,15 +38,15 @@ parser.add_argument("--model_type",
 parser.add_argument("--use_cuda",
                     type = bool, default = False)
 parser.add_argument("--save_model",
-                    type = bool, default = False)
+                    type = bool, default = True)
 parser.add_argument("--model_name_2_save",
-                    type = str, default = "model")
+                    type = str, default = "default_name")
 
 ####### Training params #################
 parser.add_argument("--test_percent",
                     type = float, default = 0.1)
 parser.add_argument("--n_epochs",
-                    type = int, default = 10)
+                    type = int, default = 2)
 parser.add_argument("--lr",
                     type = float, default = 0.0003)
 parser.add_argument("--batch_size",
@@ -72,11 +72,6 @@ def main():
   model_type = args.model_type
   save_folder = args.feature_save_folder  
   selected_machine_ids = args.selected_machine_ids 
-
-  if args.model_name_2_save == "model":
-      model_name = args.model_name_2_save
-  else:
-      model_name = "PyTorch_AutoEnc_" + selected_machine_type + "_" +  selected_feature + "_" + model_type + ".pt"
       
   test_normal_pc = args.test_percent 
   save_model = args.save_model 
@@ -113,6 +108,7 @@ def main():
      dr, X_train = test_f.Make_DimensionReduction(X_train, **dimred_kwarg) 
      X_valid = test_f.Apply_DimensionReduction(X_valid, dr, **dimred_kwarg)
 
+  ############# Torch Data ############# 
   X_train = TDS.labeled_dataset(X_train, X_train)
   X_train = data.DataLoader(X_train, batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True)
   
@@ -195,10 +191,15 @@ def main():
       
       
       
-  model_name = "PyTorch_AutoEnc_" + selected_machine_type + "_" +  selected_feature + "_" + model_type + ".pt"
   if save_model:
+    if args.model_name_2_save == "default_name":
+          model_name = "PyTorch_AutoEnc_" + selected_machine_type + "_" +  selected_feature + "_" + model_type + ".pt"
+    else:
+          model_name = args.model_name_2_save
+         
+          
     torch.save(model_ae.state_dict(), 'saved_models/' + model_name)   
-    print(f"Model {model_name} saved - Cangratulations :)")
+    print(f"Model {model_name} saved - congratulations :)")
 
 
  
