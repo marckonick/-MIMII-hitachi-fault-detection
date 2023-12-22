@@ -42,4 +42,7 @@ STFT + CNN
 ## Fututre work 
 
 - Logger 
-- Make models more configurable 
+- Make models more configurable
+- Add more advanced models/features
+- Comapre results across different machines 
+
