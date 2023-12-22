@@ -5,7 +5,7 @@ Fault detection methods for the MIMII Hitachi dataset
   MIMII Dataset: Sound Dataset for Malfunctioning Industrial Machine Investigation and Inspection
   Dataset available @ https://zenodo.org/records/3384388
 
-## File Description
+## Files Description
 - MAIN_FeatureExtraction.py  - extracting deatures
 - MAIN_TrainAE.py            - training model 
 - MAIN_JustTestModel.py      - script for testing saved models 
