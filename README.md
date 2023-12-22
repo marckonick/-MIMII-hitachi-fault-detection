@@ -5,7 +5,7 @@ Fault detection methods for the MIMII Hitachi dataset
   MIMII Dataset: Sound Dataset for Malfunctioning Industrial Machine Investigation and Inspection
   Dataset available @ https://zenodo.org/records/3384388
 
-## File Descriptino
+## File Description
 MAIN_FeatureExtraction.py  - extracting deatures
 MAIN_TrainAE.py            - training model 
 
@@ -24,7 +24,7 @@ machine type: pump
 SNR: 0dB 
 
 MEL_ENER + DNN 
-Machine ID 0.0 , ROC AUC Score:  0.9249171880750828
+Machine ID 0.0 , ROC AUC Score:  0.9249171880750828 \n
 Machine ID 2.0 , ROC AUC Score:  0.7633087633087633
 Machine ID 4.0 , ROC AUC Score:  0.9384210526315788
 Machine ID 6.0 , ROC AUC Score:  0.9985294117647059
