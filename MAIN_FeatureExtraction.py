@@ -6,15 +6,15 @@ import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--selected_machine_type",
-                    type = str, default = "fan_-6dB") #"fan_-6dB" # -6_dB_fan, pump_0dB, fan_-6dB
+                    type = str, default = "pump_0dB") #"fan_-6dB" # -6_dB_fan, pump_0dB, fan_-6dB 
 parser.add_argument("--selected_feature",
-                    type = str, default = "FFT") # FFT, STFT, MelEnergy, MelLog
+                    type = str, default = "MEL_ENERGY") # FFT, STFT, MEL_ENERGY, MelLog
 parser.add_argument("--condition_type",
                     type = str, default = "normal") # normal, abnormal
 parser.add_argument("--N_samples_2_extract",
-                    type = int, default = -1)  #-1 # 100
+                    type = int, default = -1)  #-1 - means all samples  # 100
 parser.add_argument("--apply_filter",
-                    type = str, default = "False")
+                    type = bool, default = False)
 parser.add_argument("--f_type",
                     type = str, default = "median")
 parser.add_argument("--filter_order",
@@ -34,12 +34,11 @@ parser.add_argument("--frames_mel",
 parser.add_argument("--power_mel",
                     type = float, default = 2.0)
 parser.add_argument("--save_2_npy",
-                    type = bool, default = False)
-parser.add_argument("--file_folder",
+                    type = bool, default = True)
+parser.add_argument("--file_folder", # original data file 
                     type = str, default = "../")
 parser.add_argument("--save_folder",
                     type = str, default = "../SavedFeatures_NPY/")
-
 
 parser.add_argument('--selected_machine_ids', nargs='+', action = 'append', default = [0,2,4,6])
 

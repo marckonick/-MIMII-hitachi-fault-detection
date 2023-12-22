@@ -179,7 +179,7 @@ def extract_mel_energ_features(N_samples, recording_names,  **kwargs):
         X_features_ml.append(xmell_temp)
 
 
-    return np.concatenate(X_features_ml, 0), N_samples
+    return np.array(X_features_ml), N_samples  # np.concatenate(X_features_ml, 0),
 
 
 def ExtractSelectedFeatures(N_samples, recording_names, selected_feature, **kwargs):
