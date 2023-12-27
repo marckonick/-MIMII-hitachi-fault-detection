@@ -1,3 +1,4 @@
+import os
 import torch 
 import numpy as np
 import TestFunctions as test_f
@@ -10,6 +11,8 @@ from sklearn.metrics import roc_auc_score
 import copy 
 import argparse
 import time
+import logging
+from datetime import datetime
 
 parser = argparse.ArgumentParser()
 
@@ -38,12 +41,12 @@ parser.add_argument("--model_type",
                     type = str, default = "DNN") # DNN, CNN 
 parser.add_argument("--use_cuda",
                     type = bool, default = False)
-
 parser.add_argument("--model_name_2_save",
                     type = str, default = "default_name")
 
-
-
+###### LOGGING ###########
+parser.add_argument("--log_folder",
+                    type = str, default = "Logs/")
 
 
 def main():
@@ -69,6 +72,14 @@ def main():
  dimred_kwarg = {'dr_type':args.dr_type, 'embeded_dim':args.embeded_dim} 
  dr = None
   
+
+ ######## LOGGER PARAMS ###########
+ log_folder = args.log_folder
+
+ current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+ log_file_name = os.path.join(log_folder, f"Test_Model_log_{current_date}.log")
+ #logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s - %(message)s') 
+ logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(message)s')   
 ##########################LOAD DATA###################
  print("Loading Data ...\n")
   
@@ -161,8 +172,8 @@ def main():
  #plt.plot(test_score_normal)
  #plt.plot(test_score_abnormal)
  #plt.legend(['Normal loss', 'Abnormal loss'])
-
-
+ logging.info(f"Date - {current_date}\n")
+ logging.info(f"\nLogging test results for the feature type {selected_feature}, model type: {model_type}\n")
  for machine_idx in selected_machine_ids:
 
   machine_idx /= 2
@@ -176,6 +187,7 @@ def main():
   ROCAUC_test_score = roc_auc_score(labels_4_test, preds_4_test)
 
   print("Machine ID", machine_idx*2, ", ROC AUC Score: ", ROCAUC_test_score)
+  logging.info(f"Machine ID  {machine_idx*2} ROC AUC Score: {ROCAUC_test_score}")
 
 
 if __name__ == '__main__':

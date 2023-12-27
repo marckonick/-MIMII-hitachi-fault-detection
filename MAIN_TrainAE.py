@@ -9,6 +9,10 @@ import TestFunctions as test_f
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score
 import argparse
+import time
+from datetime import datetime
+import logging
+import os 
 
 parser = argparse.ArgumentParser()
 
@@ -48,14 +52,15 @@ parser.add_argument("--test_percent",
 parser.add_argument("--n_epochs",
                     type = int, default = 2)
 parser.add_argument("--lr",
-                    type = float, default = 0.0003)
+                    type = float, default = 0.0008)
 parser.add_argument("--batch_size",
                     type = int, default = 64)
-
-
 parser.add_argument("--to_test_model",
                     type = bool, default = True)
 
+###### LOGGING ###########
+parser.add_argument("--log_folder",
+                    type = str, default = "Logs/")
 
 def main():
     
@@ -82,6 +87,14 @@ def main():
   dr = None
   
   to_test_model = args.to_test_model
+  ######## LOGGER PARAMS ###########
+  log_folder = args.log_folder
+
+  current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+  log_file_name = os.path.join(log_folder, f"Train_Model_log_{current_date}.log")
+  #logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s - %(message)s') 
+  logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(message)s')  
+
   ##########################LOAD DATA###################
   print("Loading Data ...\n")
   
@@ -159,6 +172,9 @@ def main():
 
   model_ae.train()
   print("Starting model training ...\n")
+  logging.info(f"Date - {current_date}\n")
+  logging.info(f"Starting model training ...\n")
+
   for epoch in range(1,n_epochs+1):
     loss_train = 0.0
     for x, y in X_train:
@@ -170,7 +186,7 @@ def main():
                outputs = model_ae(x.float())
                
                if model_type == 'VAE':
-                   loss = loss_fn(outputs, y.float()) + model_ae.encoder.kl # torch.argmax(y, axis=1)
+                   loss = loss_fn(outputs, y.float()) + model_ae.encoder.kl 
                else:
                    loss = loss_fn(outputs, y.float())
                    
@@ -178,6 +194,8 @@ def main():
                loss.backward()
                optimizer.step()
                loss_train += loss.item()
+
+
 
     #if epoch % 20==0:
     #  for param_group in optimizer.param_groups:
@@ -190,6 +208,10 @@ def main():
       print(" Epoch ", epoch, "/",n_epochs, " Valid loss = ", vloss)
       
       
+      logging.info(f" Epoch {epoch}/{n_epochs}, Train loss = {float(loss_train/len(X_train))}")
+      logging.info(f" Epoch  {epoch}/{n_epochs}, Valid loss = {vloss}")
+      
+      
       
   if save_model:
     if args.model_name_2_save == "default_name":
@@ -200,6 +222,7 @@ def main():
           
     torch.save(model_ae.state_dict(), 'saved_models/' + model_name)   
     print(f"Model {model_name} saved - congratulations :)")
+    logging.info(f"\nModel {model_name} saved - congratulations :)\n")
 
 
  
@@ -224,8 +247,6 @@ def main():
           X_abnormal = data.DataLoader(X_abnormal, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=False)
 
     
-    
-    
       if selected_feature == "STFT" or selected_feature == "MelLog": 
          test_score_normal = test_f.mse_loss_test_stft(model_ae, X_valid, device, selected_feature)
          test_score_abnormal = test_f.mse_loss_test_stft(model_ae, X_abnormal, device, selected_feature)
@@ -238,7 +259,8 @@ def main():
       #plt.plot(test_score_abnormal)
       #plt.legend(['Normal loss', 'Abnormal loss'])
 
-
+      
+      logging.info(f"\nLogging test results for the feature type {selected_feature}, model type: {model_type}\n")
       for machine_idx in selected_machine_ids:
 
           machine_idx /= 2
@@ -252,6 +274,7 @@ def main():
           ROCAUC_test_score = roc_auc_score(labels_4_test, preds_4_test)
      
           print("Machine ID", machine_idx*2, ", ROC AUC Score: ", ROCAUC_test_score)
+          logging.info(f"Machine ID  {machine_idx*2} ROC AUC Score: {ROCAUC_test_score}")
 
 
 if __name__ == '__main__':

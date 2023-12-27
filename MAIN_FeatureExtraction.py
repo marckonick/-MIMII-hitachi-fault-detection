@@ -3,6 +3,9 @@ import os
 import FeatureExtractionFunctions as FEF
 import argparse
 import time
+import logging
+import time 
+from  datetime import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--selected_machine_type",
@@ -12,7 +15,7 @@ parser.add_argument("--selected_feature",
 parser.add_argument("--condition_type",
                     type = str, default = "normal") # normal, abnormal
 parser.add_argument("--N_samples_2_extract",
-                    type = int, default = -1)  #-1 - means all samples  # 100
+                    type = int, default = 20)  #-1 - means all samples  # 100
 parser.add_argument("--apply_filter",
                     type = bool, default = False)
 parser.add_argument("--f_type",
@@ -28,20 +31,24 @@ parser.add_argument("--overlap_l",
 parser.add_argument("--hop_l",
                     type = int, default = 512)
 parser.add_argument("--n_mels",
-                    type = int, default = 128)
+                    type = int, default = 64)
 parser.add_argument("--frames_mel",
-                    type = int, default = 5)
+                    type = int, default = 2)
 parser.add_argument("--power_mel",
                     type = float, default = 2.0)
 parser.add_argument("--save_2_npy",
-                    type = bool, default = True)
+                    type = bool, default = False)
 parser.add_argument("--file_folder", # original data file 
                     type = str, default = "../")
 parser.add_argument("--save_folder",
                     type = str, default = "../SavedFeatures_NPY/")
-
 parser.add_argument('--selected_machine_ids', nargs='+', action = 'append', default = [0,2,4,6])
 
+###### LOGGING ###########
+parser.add_argument("--to_log",
+                    type = bool, default = True)
+parser.add_argument("--log_folder",
+                    type = str, default = "Logs/")
 
 
 
@@ -68,7 +75,18 @@ def main():
  selected_machine_ids = args.selected_machine_ids
 
  curr_label = 0
+ 
+ #####3 LOGGER ##########
+ to_log = args.to_log
+ if to_log:
+      log_folder = args.log_folder
+      #current_date = datetime.fromtimestamp(tm)
 
+      current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+      log_file_name = os.path.join(log_folder, f"FeatExtraction_log_{current_date}.log")
+      logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(message)s')
+
+      logging.info(f"Date - {current_date}\n")
 
  for selected_machine_id in selected_machine_ids:
 
@@ -81,10 +99,19 @@ def main():
     kwarg_args.update(temp_kwargs)
 
     print(f"\nExtracting {selected_feature} features for machine {selected_machine_id} ... ")
+    if to_log:
+        logging.info(f"\nExtracting {selected_feature} features for machine {selected_machine_id} ... ")
+        logging.info(f"Number of samples to extract: {N_samples_2_extract}")
+    
+
     t0 = time.time()
     X_features_t, N_samples = FEF.ExtractSelectedFeatures(N_samples_2_extract, recording_names, selected_feature, **kwarg_args)
     t1 = time.time()
+    
     print(f"Feature extraction done! Elapsed time: {t1-t0:.2f} seconds\n")
+    if to_log:
+        logging.info(f"Feature extraction done! Elapsed time: {t1-t0:.2f} seconds\n")
+    
     
     X_features_all.append(X_features_t)
     Y_features_all.append(np.ones(X_features_t.shape[0])*curr_label)
@@ -94,6 +121,7 @@ def main():
     Y_features_all = np.concatenate(Y_features_all)
 
     del X_features_t
+    
 
     if save_2_npy:
         save_folder_npy = save_folder + selected_machine_type + '_npy/' + selected_feature + "/"
@@ -112,8 +140,9 @@ def main():
         if not isExist:
             os.makedirs(save_folder_npy) 
     
-    
         print(f"Saving features to : \n X - {x_f_name} \n Y - {y_f_name} " )
+        if to_log:               
+            logging.info(f"Saving features to : \n X - {x_f_name} \n Y - {y_f_name} " )
         np.save(x_f_name, X_features_all) 
         np.save(y_f_name, Y_features_all) 
     
