@@ -18,9 +18,9 @@ Feature types:
               - https://github.com/y-kawagu/dcase2020_task2_baseline
 
 Model types:
- - Feed-forward neural networks autoencoder
- - Convolutional neural netowrks autoencoder
- - Variational autoencoder 
+ - Feed-forward neural networks autoencoder (DNN AE)
+ - Convolutional neural netowrks autoencoder (CNN AE)
+ - Variational autoencoder  (VAE)
 
 ## Example results
 
