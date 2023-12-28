@@ -2,21 +2,25 @@
 Fault detection methods for the MIMII Hitachi dataset
 
 ## Description 
-  MIMII Dataset: Sound Dataset for Malfunctioning Industrial Machine Investigation and Inspection
-  Dataset available @ https://zenodo.org/records/3384388
+MIMII Dataset: Sound Dataset for Malfunctioning Industrial Machine Investigation and Inspection
+Dataset available @ https://zenodo.org/records/3384388
 
 ## Files Description
 - MAIN_FeatureExtraction.py  - extracting deatures
 - MAIN_TrainAE.py            - training model 
 - MAIN_JustTestModel.py      - script for testing saved models 
 
-
-Current feature types:
+Feature types:
 - FFT - Fast Fourier Transform
 - STFT - Short-Time Fourier Transform
-- MelLog -   Mel-log spectrogram
+- MelLog - Mel-log spectrogram
 - MEL_ENERGY -  Mel-log spectrogram energies - features taken from the baseline model repository 
               - https://github.com/y-kawagu/dcase2020_task2_baseline
+
+Model types:
+ - Feed-forward neural networks autoencoder
+ - Convolutional neural netowrks autoencoder
+ - Variational autoencoder 
 
 ## Example results
 
@@ -42,8 +46,7 @@ STFT + CNN
   modifying network architecture 
 
 ## Fututre work 
-
-- Logger 
+ 
 - Make models more configurable
 - Add more advanced models/features
 - Comapre results across different machines 
