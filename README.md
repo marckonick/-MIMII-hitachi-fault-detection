@@ -28,7 +28,7 @@ Model types:
 - machine type: pump
 - SNR: 0dB 
 
-MEL_ENER + DNN 
+MEL_ENER + DNN AE
 - Machine ID 0.0 , ROC AUC Score:  0.9249171880750828 
 - Machine ID 2.0 , ROC AUC Score:  0.7633087633087633
 - Machine ID 4.0 , ROC AUC Score:  0.9384210526315788
